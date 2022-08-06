@@ -1,2 +1,5 @@
-/*.db
-/*.db-journals
+*.db
+*.db-journals
+*.tfstate
+*.tfstate.*
+.terraform
