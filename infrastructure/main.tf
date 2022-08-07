@@ -29,24 +29,21 @@ resource "aws_instance" "menu_server" {
 resource "aws_security_group" "allow_tls" {
   name        = "allow_tls"
   description = "Allow TLS inbound traffic on port 22 and 5000"
-  vpc_id      = aws_vpc.main.id
 
   ingress {
-    description      = "TLS from VPC"
+    description      = "TLS from VPC allow on port 5000"
     from_port        = 5000
     to_port          = 5000
     protocol         = "tcp"
-    cidr_blocks      = [aws_vpc.main.cidr_block]
-    ipv6_cidr_blocks = [aws_vpc.main.ipv6_cidr_block]
+    cidr_blocks      = ["0.0.0.0/0"]
   }
 
   ingress {
-    description      = "TLS from VPC"
+    description      = "TLS from VPC allow on port 22"
     from_port        = 22
     to_port          = 22
     protocol         = "tcp"
-    cidr_blocks      = [aws_vpc.main.cidr_block]
-    ipv6_cidr_blocks = [aws_vpc.main.ipv6_cidr_block]
+    cidr_blocks      = ["0.0.0.0/0"]
   }
 
   tags = {
