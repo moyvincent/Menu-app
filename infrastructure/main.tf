@@ -13,18 +13,6 @@ provider "aws" {
   region  = "us-east-1"
 }
 
-#EC2 instance
-resource "aws_instance" "menu_server" {
-  ami           = "ami-052efd3df9dad4825"
-  instance_type = "t2.micro"
-  key_name = "eksKeyPair"
-
-  tags = {
-    Name = "Menuproject"
-    project = "Menu_app"
-  }
-}
-
 #Security group
 resource "aws_security_group" "allow_tls" {
   name        = "allow_tls"
@@ -48,6 +36,19 @@ resource "aws_security_group" "allow_tls" {
 
   tags = {
     Name = "allow_tls"
+    project = "Menu_app"
+  }
+}
+
+#EC2 instance
+resource "aws_instance" "menu_server" {
+  ami           = "ami-052efd3df9dad4825"
+  instance_type = "t2.micro"
+  key_name = "eksKeyPair"
+  vpc_security_group_ids = [aws_security_group.allow_tls.id]
+
+  tags = {
+    Name = "Menuproject"
     project = "Menu_app"
   }
 }
