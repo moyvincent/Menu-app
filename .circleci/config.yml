@@ -72,7 +72,7 @@ jobs:
             cd infrastructure/
             terraform init
             terraform plan
-            terraform -auto-approve apply
+            terraform  apply -auto-approve
             cd ..
       - run:
           name: Add server ip to ansible inventory
