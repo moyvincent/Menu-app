@@ -1,6 +1,6 @@
 ---
 
-- name: Install Doccker
+- name: Install Docker
   apt: 
     update_cache: yes
     name: docker.io
