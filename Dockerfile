@@ -7,7 +7,7 @@ WORKDIR /menu_app
 COPY . app.py /menu_app/
 
 ## Step 3:
-RUN pip install --no-cache-dir --upgrade pip && \
+RUN pip install --no-cache-dir --upgrade pip==22.2 && \
     pip install --no-cache-dir -r requirements.txt
 # hadolint ignore=DL3013
 
