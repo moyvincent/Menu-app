@@ -9,6 +9,7 @@ commands:
           when: on_fail
           command: |
             cd infrastructure
+            terraform init
             terraform destroy
             cd ..
 
@@ -107,8 +108,7 @@ jobs:
       - run:
           name: Configure server
           command: |
-            cd .circleci/ansible
-            ansible-playbook -i inventory.txt config-server.yml 
+            ansible-playbook -i .circleci/ansible/inventory.txt config-server.yml 
       - destroy-environment
   
   deploy-app:
@@ -125,7 +125,14 @@ jobs:
       - run:
           name: Build and run docker image
           command: |
-            ./run_docker.sh
+            # Build image and add a descriptive tag
+            docker build --tag vinopaul/menu-app:v1.0.0 .
+
+            # List docker images
+            docker image ls
+
+            # Run flask app
+            docker run -p 5000:5000 vinopaul/menu-app:v1.0.0
       - destroy-environment
 
 workflows:
