@@ -4,6 +4,8 @@ commands:
   destroy-environment:
     description: Destroy environments  
     steps:
+      - attach_workspace:
+          at: ~/
       - run:
           name: Destroy environments
           when: on_fail
@@ -105,10 +107,11 @@ jobs:
           command: |
             apk add --update ansible
             apk add --update tar gzip
+            apk add --upgrade terraform
       - run:
           name: Configure server
           command: |
-            ansible-playbook -i .circleci/ansible/inventory.txt config-server.yml 
+            ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/config-server.yml
       - destroy-environment
   
   deploy-app:
