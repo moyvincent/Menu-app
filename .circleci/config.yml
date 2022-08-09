@@ -8,7 +8,9 @@ commands:
           name: Destroy environments
           when: on_fail
           command: |
+            cd infrastructure
             terraform destroy
+            cd ..
 
 
 jobs:
