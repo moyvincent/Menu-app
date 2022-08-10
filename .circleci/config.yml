@@ -11,6 +11,7 @@ commands:
           when: on_fail
           command: |
             cd infrastructure
+            terraform version
             terraform apply -auto-approve tfdestroy
             cd ..
 
@@ -79,6 +80,7 @@ jobs:
             terraform  apply -auto-approve
             terraform plan -destroy -out tfdestroy
             pwd
+            terraform version
             cd ..
       - run:
           name: Add server ip to ansible inventory
@@ -110,6 +112,7 @@ jobs:
             apk add --update ansible
             apk add --update tar gzip
             apk add --upgrade terraform
+            terraform version
       - run:
           name: Configure server
           command: |
@@ -141,6 +144,7 @@ jobs:
             yum install -y yum-utils
             yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
             yum -y install terraform
+            terraform version
       - run:
           name: Build and run docker image
           command: |
