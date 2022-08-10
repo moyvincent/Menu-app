@@ -129,12 +129,12 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
-      - attach_workspace:
-          at: ~/
       - run:
-          name: Install tar gzip and awscli
+          name: Install tar gzip
           command: |
             yum install -y tar gzip
+      - attach_workspace:
+          at: ~/
       - run:
           name: Install terraform
           command: |
