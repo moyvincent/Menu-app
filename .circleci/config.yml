@@ -113,7 +113,11 @@ jobs:
       - run:
           name: Configure server
           command: |
-            ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/config-server.yml
+            cd .circleci/ansible
+            cat inventory.txt
+            ansible-playbook -i inventory.txt config-server.yml
+            cd ..
+            cd ..
       - persist_to_workspace:
           root: ~/
           paths:
@@ -127,6 +131,10 @@ jobs:
       - checkout
       - attach_workspace:
           at: ~/
+      - run:
+          name: Install tar gzip and awscli
+          command: |
+            yum install -y tar gzip
       - run:
           name: Install terraform
           command: |
