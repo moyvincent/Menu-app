@@ -78,7 +78,6 @@ jobs:
             terraform plan
             terraform  apply -auto-approve
             terraform plan -destroy -out tfdestroy
-            cat tfdestroy
             pwd
             cd ..
       - run:
@@ -118,7 +117,7 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - /infrastructure/tfdestroy
+            - project/infrastructure/tfdestroy
       - destroy-environment
   
   deploy-app:
@@ -148,7 +147,7 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - /infrastructure/tfdestroy
+            - project/infrastructure/tfdestroy
       - destroy-environment
 
 workflows:
