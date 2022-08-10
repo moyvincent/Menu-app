@@ -91,7 +91,7 @@ jobs:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
-            - /infrastructure/tfdestroy
+            - project/infrastructure/tfdestroy
       - destroy-environment
 
   configure-infrastructure:
