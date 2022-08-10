@@ -5,14 +5,13 @@ commands:
     description: Destroy environments  
     steps:
       - attach_workspace:
-          at: ~/
+          at: /infrastructure/tfdestroy
       - run:
           name: Destroy environments
           when: on_fail
           command: |
             cd infrastructure
-            terraform init
-            terraform destroy
+            terraform apply -auto-approve tfdestroy
             cd ..
 
 
@@ -75,9 +74,10 @@ jobs:
           name: Deploy infrastructure
           command: |
             cd infrastructure/
-            terraform init
+            terraform init -input=false
             terraform plan
             terraform  apply -auto-approve
+            terraform plan -destroy -out tfdestroy -var-file terraform.tfvars
             cd ..
       - run:
           name: Add server ip to ansible inventory
@@ -91,6 +91,7 @@ jobs:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
+            - /infrastructure/tfdestroy
       - destroy-environment
 
   configure-infrastructure:
@@ -112,6 +113,10 @@ jobs:
           name: Configure server
           command: |
             ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/config-server.yml
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - /infrastructure/tfdestroy
       - destroy-environment
   
   deploy-app:
@@ -119,6 +124,8 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
+      - attach_workspace:
+          at: ~/
       - run:
           name: Install terraform
           command: |
@@ -136,6 +143,10 @@ jobs:
 
             # Run flask app
             docker run -p 5000:5000 vinopaul/menu-app:v1.0.0
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - /infrastructure/tfdestroy
       - destroy-environment
 
 workflows:
