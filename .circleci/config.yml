@@ -111,16 +111,17 @@ jobs:
           command: |
             apk add --update ansible
             apk add --update tar gzip
-            apk add --upgrade terraform
-            terraform version
+      - run:
+          name: Install terraform
+          command: |
+            wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
+            echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+            sudo apt update && sudo apt install terraform
       - run:
           name: Configure server
           command: |
-            cd .circleci/ansible
             cat inventory.txt
-            ansible-playbook -i inventory.txt config-server.yml
-            cd ..
-            cd ..
+            ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/config-server.yml
       - persist_to_workspace:
           root: ~/
           paths:
