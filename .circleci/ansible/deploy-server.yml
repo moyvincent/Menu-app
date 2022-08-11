@@ -1,0 +1,11 @@
+---
+
+- name: Deploy Web Server
+  hosts: webservers
+  become: true
+  become_method: sudo
+  become_user: root  
+  tasks:
+    - name: Run Dockerized app
+      shell: |
+        docker run -p 5000:5000 vinopaul/menu-app:v1.0.0

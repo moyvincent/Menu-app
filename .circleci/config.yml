@@ -76,12 +76,7 @@ jobs:
           command: |
             cd infrastructure/
             terraform init -input=false
-            terraform plan
             terraform  apply -auto-approve
-            terraform plan -destroy -out tfdestroy
-            pwd
-            ls
-            terraform version
             cd ..
       - run:
           name: Add server ip to ansible inventory
@@ -95,25 +90,20 @@ jobs:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
-            - project/infrastructure/tfdestroy
-      - destroy-environment
 
   configure-infrastructure:
     docker:
-      - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
+      - image: python:3.7-alpine3.11
     steps:
       - checkout
       - add_ssh_keys:
             fingerprints: ["22:e4:5c:56:26:31:a9:63:51:10:71:c2:60:3c:c5:02"]
-      - run:
-          name: Install dependencies
-          command: |
-            apt update
-            apt install software-properties-common
-            add-apt-repository --yes --update ppa:ansible/ansible
-            apt install ansible
       - attach_workspace:
           at: ~/
+      - run:
+          name: Install ansible
+          command: |
+            apk add --update ansible
       - run:
           name: Configure server
           command: |
@@ -122,43 +112,33 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - project/infrastructure/tfdestroy
-      - destroy-environment
+            - project/.circleci/ansible/inventory.txt
   
   deploy-app:
     docker:
-      - image: amazon/aws-cli
+      - image: python:3.7-alpine3.11
     steps:
       - checkout
-      - run:
-          name: Install tar gzip
-          command: |
-            yum install -y tar gzip
       - attach_workspace:
           at: ~/
       - run:
-          name: Install terraform
-          command: |
-            yum install -y yum-utils
-            yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
-            yum -y install terraform
-            terraform version
-      - run:
           name: Build and run docker image
           command: |
+            cat ~/doc_pass.txt | docker login --username vinopaul --password-stdin
+            
             # Build image and add a descriptive tag
             docker build --tag vinopaul/menu-app:v1.0.0 .
 
+            # Push docker image to dockerhub
+            docker push vinopaul/menu-app:v1.0.0
+
             # List docker images
             docker image ls
-
-            # Run flask app
-            docker run -p 5000:5000 vinopaul/menu-app:v1.0.0
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - project/infrastructure/tfdestroy
-      - destroy-environment
+      - run:
+          name: Deploy server
+          command: |
+            cat inventory.txt
+            ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/deploy-server.yml
 
 workflows:
   default:
