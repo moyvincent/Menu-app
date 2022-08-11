@@ -99,7 +99,7 @@ jobs:
 
   configure-infrastructure:
     docker:
-      - image: amazon/aws-cli
+      - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
     steps:
       - checkout
       - add_ssh_keys:
@@ -107,18 +107,12 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            yum update
-            yum install -y ansible --enablerepo=epel
-            yum install -y tar gzip
+            sudo apt update
+            sudo apt install software-properties-common
+            sudo add-apt-repository --yes --update ppa:ansible/ansible
+            sudo apt install ansible
       - attach_workspace:
           at: ~/
-      - run:
-          name: Install terraform
-          command: |
-            yum install -y yum-utils
-            yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
-            yum -y install terraform
-            terraform version
       - run:
           name: Configure server
           command: |
