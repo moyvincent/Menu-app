@@ -107,7 +107,7 @@ jobs:
       - run:
           name: Configure server
           command: |
-            cat inventory.txt
+            cat .circleci/ansible/inventory.txt
             ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/config-server.yml
       - persist_to_workspace:
           root: ~/
@@ -125,7 +125,7 @@ jobs:
           name: Build and run docker image
           command: |
             cat ~/doc_pass.txt | docker login --username vinopaul --password-stdin
-            
+
             # Build image and add a descriptive tag
             docker build --tag vinopaul/menu-app:v1.0.0 .
 
