@@ -5,7 +5,7 @@ commands:
     description: Destroy environments  
     steps:
       - attach_workspace:
-          at: /infrastructure/tfdestroy
+          at: project/infrastructure/tfdestroy
       - run:
           name: Destroy environments
           when: on_fail
@@ -80,6 +80,7 @@ jobs:
             terraform  apply -auto-approve
             terraform plan -destroy -out tfdestroy
             pwd
+            ls
             terraform version
             cd ..
       - run:
@@ -107,10 +108,10 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            sudo apt update
-            sudo apt install software-properties-common
-            sudo add-apt-repository --yes --update ppa:ansible/ansible
-            sudo apt install ansible
+            apt update
+            apt install software-properties-common
+            add-apt-repository --yes --update ppa:ansible/ansible
+            apt install ansible
       - attach_workspace:
           at: ~/
       - run:
