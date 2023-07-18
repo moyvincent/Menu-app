@@ -144,12 +144,12 @@ workflows:
   default:
     jobs:
       - build
-      - create-infrastructure:
-          requires: [build]
-      - configure-infrastructure:
-          requires: [create-infrastructure]
-      - deploy-app:
-          requires: [configure-infrastructure]
+      # - create-infrastructure:
+      #     requires: [build]
+      # - configure-infrastructure:
+      #     requires: [create-infrastructure]
+      # - deploy-app:
+      #     requires: [configure-infrastructure]
         
 
 
