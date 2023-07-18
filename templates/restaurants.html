@@ -1,15 +1,24 @@
-<html>
+{% extends "base.html" %}
 
-<body>
+{% block title %}Home - Menu App{% endblock %}
 
-{% for i in restaurant %}
+{% block content %}
 
-<div>
-    <a href="{{ url_for('restaurantMenu', restaurant_id=i.id) }}">{{i.name}}</a>
-</div>
+    {% for i in restaurant %}
 
-
-{% endfor %}
-</body>
-
-</html>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6 mb-3 mb-sm-0">
+                <div class="card">
+                    <img src="..." class="img-thumbnail" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">Restaurant</h5>
+                        <p class="card-text">Nigeria</p>
+                        <a href="{{ url_for('restaurantMenu', restaurant_id=i.id) }}" class="btn btn-primary">{{i.name}}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+{% endblock %}
