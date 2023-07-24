@@ -1,3 +1,6 @@
+import json
+
+import sqlalchemy
 from database_setup import Base, Restaurant, MenuItem
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
@@ -46,7 +49,8 @@ def newMenuItem(restaurant_id):
 def createRestaurant():
 
     if request.method == 'POST':
-        newRestaurant = Restaurant(name=request.form['name'])
+        file_data = json.loads(request.form['file-uploaded'])
+        newRestaurant = Restaurant(name=request.form['name'], handle=file_data["handle"], filename=file_data["filename"])
         session.add(newRestaurant)
         session.commit()
         return redirect(url_for('restaurantList'))

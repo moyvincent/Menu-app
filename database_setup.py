@@ -13,8 +13,9 @@ class Restaurant(Base):
    # Mappers
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
-    image_data = Column(String(400), nullable=True)
-
+    handle = Column(String(50), nullable=False)
+    filename = Column(String(100), nullable=False)
+    
 
 class MenuItem(Base):
     # Table information
